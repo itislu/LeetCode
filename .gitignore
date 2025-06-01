@@ -1,0 +1,15 @@
+*
+!*/
+!*.md
+!*.txt
+!.devcontainer/**
+!.gitignore
+
+# Python
+!*.py
+
+# Rust
+target
+!*.lock
+!*.rs
+!*.toml
