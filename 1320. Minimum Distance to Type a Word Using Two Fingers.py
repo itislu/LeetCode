@@ -10,8 +10,8 @@ class Solution:
             if i == len(word):
                 return 0
             return min(
-                self.distance(f1, word[i]) + dp(i + 1, word[i], f2),
-                self.distance(f2, word[i]) + dp(i + 1, f1, word[i]),
+                Solution.distance(f1, word[i]) + dp(i + 1, word[i], f2),
+                Solution.distance(f2, word[i]) + dp(i + 1, f1, word[i]),
             )
 
         return dp(0, "", "")
@@ -19,10 +19,11 @@ class Solution:
     keyboard = {c: (i // 6, i % 6) for i, c in enumerate(string.ascii_uppercase)}
 
     @cache
-    def distance(self, src: str, dst: str) -> int:
+    @staticmethod
+    def distance(src: str, dst: str) -> int:
         if src == "":
             return 0
-        (x1, y1), (x2, y2) = self.keyboard[src], self.keyboard[dst]
+        (x1, y1), (x2, y2) = Solution.keyboard[src], Solution.keyboard[dst]
         return abs(x1 - x2) + abs(y1 - y2)
 
 
