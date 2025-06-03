@@ -18,6 +18,7 @@ class Solution:
 
     keyboard = {c: (i // 6, i % 6) for i, c in enumerate(string.ascii_uppercase)}
 
+    @cache
     def distance(self, src: str, dst: str) -> int:
         if src == "":
             return 0
