@@ -8,9 +8,9 @@ class Solution:
         min_res = int(left) + int(right)
 
         for l in range(len(left)):
+            left_mul = int(left[:l] or 1)
+            left_add = int(left[l:])
             for r in range(1, len(right) + 1):
-                left_mul = int(left[:l] or 1)
-                left_add = int(left[l:])
                 right_add = int(right[:r])
                 right_mul = int(right[r:] or 1)
 
