@@ -4,7 +4,7 @@ from typing import List
 
 class Solution:
     def findWords(self, words: List[str]) -> List[str]:
-        rows = [set(iter("qwertyuiop")), set(iter("asdfghjkl")), set(iter("zxcvbnm"))]
+        rows = [set("qwertyuiop"), set("asdfghjkl"), set("zxcvbnm")]
         result = []
         for word in words:
             word_lower = word.lower()
