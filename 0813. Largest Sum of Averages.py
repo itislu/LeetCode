@@ -5,19 +5,21 @@ from typing import List
 
 class Solution:
     def largestSumOfAverages(self, nums: List[int], k: int) -> float:
-        @cache
-        def f(begin: int, end: int, k: int) -> float:
-            if end - begin == 0:
-                return 0
-            if k == 1:
-                return sum(nums[begin:end]) / (end - begin)
-            return max(
-                f(begin, i, ks) + f(i, end, k - ks)
-                for i in range(begin, end)
-                for ks in range(1, k)
-            )
+        cur = 0
+        prefix_sums = [0] + [(cur := cur + num) for num in nums]
 
-        return f(0, len(nums), k)
+        def avg(begin: int, end: int) -> float:
+            if begin == end:
+                return 0
+            return (prefix_sums[end] - prefix_sums[begin]) / (end - begin)
+
+        @cache
+        def dp(end: int, k: int) -> float:
+            if k == 1 or end == 0:
+                return avg(0, end)
+            return max(dp(i, k - 1) + avg(i, end) for i in range(end))
+
+        return dp(len(nums), k)
 
 
 class TestSolution(unittest.TestCase):
