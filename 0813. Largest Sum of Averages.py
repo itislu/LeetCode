@@ -1,3 +1,4 @@
+import random
 import unittest
 from functools import cache
 from typing import List
@@ -76,9 +77,10 @@ class TestSolution(unittest.TestCase):
         self.assertAlmostEqual(result, expected, places=5)
 
     def test_timeout(self):
-        nums = [7958,2136,9787,7340,2560,8919,8055,5309,6477,867,9790,5577,9995,7166,389,3952,7973,3293,206,8560,3312,9053,5035,7231,5058,1420,6243,4420,5047,8150,7024,2000,7914,9097,1023,2938,4946,7236,1501,6189,9048,6559,9952,6533,7963,1049,208,2049,3107,9530]
+        random.seed(42)
+        nums = [random.randint(1, 10**4) for _ in range(100)]
         k = 33
-        expected = 219773.81667
+        expected = 217937.92778
         result = self.solution.largestSumOfAverages(nums, k)
         self.assertAlmostEqual(result, expected, places=5)
 

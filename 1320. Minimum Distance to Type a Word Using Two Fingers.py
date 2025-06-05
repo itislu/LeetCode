@@ -1,3 +1,4 @@
+import random
 import string
 import unittest
 from functools import cache
@@ -62,8 +63,9 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_timeout(self):
-        word = "ALKDFJEWLKFBSCXVMBWEKJQOIDFKLXNCVMJKBQERASKLDFKJABSDKJBWKJBKJHKJHXCKVBKMWBEMRBKBFKSNVASDFLKHWEKLRHKSDJFKANDSFKLJASKDFJJSDJFHKJHEWRHQIUERHWBDFKXBCVBXCNKBVKWBKEBFKQYYXCVBNMAASDFHKJLGQWERIOUPTZ"
-        expected = 364
+        random.seed(42)
+        word = "".join(random.choice(string.ascii_uppercase) for _ in range(300))
+        expected = 596
         result = self.solution.minimumDistance(word)
         self.assertEqual(result, expected)
 
