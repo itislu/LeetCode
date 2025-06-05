@@ -1,26 +1,46 @@
 import unittest
-from typing import List
+from functools import cache
+from typing import List, Tuple
 
 
 class Solution:
-    """
-    If there is a subset sum of S / k, S / k * 2, ..., S / k * (k - 1),
-    then it is possible to make k equal sum subsets.
-    """
-
+    # The sorting steps are crucial for performance
     def canPartitionKSubsets(self, nums: List[int], k: int) -> bool:
         s = sum(nums)
         if s % k != 0:
             return False
 
-        dp = [False for _ in range(s + 1)]
-        dp[0] = True
-        for num in nums:
-            for n in range(s, num - 1, -1):
-                dp[n] = dp[n - num] or dp[n]
+        # Try large numbers first for better pruning
+        nums.sort(reverse=True)
+
+        @cache
+        def dp(i: int, parts: Tuple[int]) -> bool:
+            all_zeros = True
+            for part in parts:
+                if part < 0:
+                    return False
+                if part > 0:
+                    all_zeros = False
+                    break
+            if all_zeros:
+                return True
+
+            if i == len(nums):
+                return False
+
+            return any(
+                dp(
+                    i + 1,
+                    tuple(
+                        # Sort for better function call caching
+                        sorted(parts[:p] + tuple([parts[p] - nums[i]]) + parts[p + 1 :])
+                    ),
+                )
+                for p in range(len(parts))
+            )
 
         t = s // k
-        return all(dp[t * p] for p in range(1, k + 1))
+        return dp(0, tuple(t for _ in range(k)))
 
 
 class TestSolution(unittest.TestCase):
@@ -37,6 +57,13 @@ class TestSolution(unittest.TestCase):
     def test_example_2(self):
         nums = [1, 2, 3, 4]
         k = 3
+        expected = False
+        result = self.solution.canPartitionKSubsets(nums, k)
+        self.assertEqual(result, expected)
+
+    def test_case_1(self):
+        nums = [2, 2, 2, 2, 3, 4, 5]
+        k = 4
         expected = False
         result = self.solution.canPartitionKSubsets(nums, k)
         self.assertEqual(result, expected)
@@ -94,6 +121,20 @@ class TestSolution(unittest.TestCase):
         nums = [1, 2, 3]
         k = 4
         expected = False
+        result = self.solution.canPartitionKSubsets(nums, k)
+        self.assertEqual(result, expected)
+
+    def test_timeout_1(self):
+        nums = [10, 1, 10, 9, 6, 1, 9, 5, 9, 10, 7, 8, 5, 2, 10, 8]
+        k = 11
+        expected = False
+        result = self.solution.canPartitionKSubsets(nums, k)
+        self.assertEqual(result, expected)
+
+    def test_timeout_2(self):
+        nums = [18,20,39,73,96,99,101,111,114,190,207,295,471,649,700,1037]
+        k = 4
+        expected = True
         result = self.solution.canPartitionKSubsets(nums, k)
         self.assertEqual(result, expected)
 
