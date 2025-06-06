@@ -1,37 +1,17 @@
 import unittest
-from functools import cache
 from typing import List
 
 
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
-        coins.sort()
+        dp = [0] * (amount + 1)
+        dp[0] = 1
 
-        # Top-down
-        @cache
-        def dp(amount: int, max_coin_idx: int) -> int:
-            if amount == 0:
-                return 1
-            return sum(
-                dp(amount - coins[i], i)
-                for i in reversed(range(max_coin_idx + 1))
-                if coins[i] <= amount
-            )
+        for coin in coins:
+            for a in range(coin, amount + 1):
+                dp[a] += dp[a - coin]
 
-        return dp(amount, len(coins) - 1)
-
-        # Bottom-up
-        arr = [[0 for _ in coins] for _ in range(amount + 1)]
-        for c in range(len(coins)):
-            arr[0][c] = 1
-
-        for a in range(1, amount + 1):
-            for c in range(len(coins)):
-                arr[a][c] = sum(
-                    arr[a - coins[i]][i] for i in range(c + 1) if coins[i] <= a
-                )
-
-        return arr[amount][-1]
+        return dp[-1]
 
 
 class TestSolution(unittest.TestCase):
